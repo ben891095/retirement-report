@@ -1,0 +1,487 @@
+/* 固定暗色，不跟隨系統偏好。dark only 讓表單控制項與捲軸也走暗色。 */
+:root {
+  color-scheme: dark only;
+
+  --bg: #12151a;
+  --panel: #1a1f27;
+  --panel-2: #212836;
+  --border: #2e3644;
+  --text: #e9edf3;
+  /* --muted / --faint 幾乎全用在 11–12px 小字，對比需維持 4.5:1 以上 */
+  --muted: #b7c0cd;
+  --faint: #98a3b3;
+
+  --accent: #5aa9ff;
+  --ok: #4ade80;
+  --danger: #ff6b6b;
+  --warn: #ffc14d;
+
+  /* 三條線與各區塊共用的色系 */
+  --line-cash: #62b6ff;    /* 現金 */
+  --line-invest: #4ade80;  /* 投資金額 */
+  --line-debt: #c08cff;    /* 負債 */
+  --gap-fill: rgba(255, 107, 107, 0.10);
+
+  /* 區塊標題色（fieldset legend / 面板標題），彼此不重複 */
+  --tone-base: #7cc4ff;    /* 藍 */
+  --tone-income: #5ee9a4;  /* 綠 */
+  --tone-expense: #ffc14d; /* 琥珀：支出群組 */
+  --tone-general: #ff9ec4; /* 玫瑰：支出 一般 */
+  --tone-debt: #c9a6ff;    /* 紫：支出 負債 */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  /* 頁面本身不橫捲 */
+  overflow-x: hidden;
+}
+
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+h1 {
+  font-size: 26px;
+  margin: 0 0 8px;
+  letter-spacing: 0.02em;
+  background: linear-gradient(96deg, var(--tone-base) 0%, var(--tone-income) 52%, var(--tone-debt) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* 漸層不支援時仍看得見 */
+  -webkit-text-fill-color: transparent;
+}
+
+@supports not (background-clip: text) {
+  h1 { color: var(--tone-base); -webkit-text-fill-color: var(--tone-base); }
+}
+
+.page-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+h2 { font-size: 17px; margin: 0; }
+
+/* 面板標題：左側色條 */
+.panel-title {
+  color: var(--tone-base);
+  padding-left: 10px;
+  border-left: 3px solid var(--tone-base);
+  line-height: 1.35;
+}
+
+.lede { color: var(--muted); margin: 0 0 8px; font-size: 14px; }
+.lede strong { color: var(--tone-expense); font-weight: 600; }
+.hint { color: var(--faint); font-size: 12px; margin: 4px 0 0; }
+.error { color: var(--danger); font-size: 12px; margin: 4px 0 0; min-height: 1em; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 表單 ---------- */
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 14px 16px 16px;
+  margin: 0 0 14px;
+  min-width: 0; /* fieldset 預設 min-width:min-content，會撐破 grid 欄寬 */
+}
+
+/* 並排的區塊：grid 讓同一列的高度自動齊平 */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+
+.form-row > fieldset {
+  margin: 0;
+  height: 100%;
+}
+
+/* 外層「支出」群組：自身不填色，讓內部兩張卡片看起來屬於同一組 */
+fieldset.group {
+  background: transparent;
+  padding: 12px 14px 14px;
+}
+
+fieldset.group > .form-row {
+  margin-bottom: 0;
+}
+
+fieldset.group > legend {
+  font-size: 14px;
+}
+
+legend {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* 每個區塊一個色調，讓表單一眼分得出段落 */
+fieldset[data-tone="base"]    > legend { color: var(--tone-base); }
+fieldset[data-tone="income"]  > legend { color: var(--tone-income); }
+fieldset[data-tone="expense"] > legend { color: var(--tone-expense); }
+fieldset[data-tone="general"] > legend { color: var(--tone-general); }
+fieldset[data-tone="debt"]    > legend { color: var(--tone-debt); }
+
+fieldset[data-tone="base"]    { border-top: 2px solid var(--tone-base); }
+fieldset[data-tone="income"]  { border-top: 2px solid var(--tone-income); }
+fieldset[data-tone="expense"] { border-top: 2px solid var(--tone-expense); }
+fieldset[data-tone="general"] { border-top: 2px solid var(--tone-general); }
+fieldset[data-tone="debt"]    { border-top: 2px solid var(--tone-debt); }
+
+/* 自動換行的欄位格線 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.field { min-width: 0; }
+
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+input {
+  width: 100%;
+  padding: 9px 11px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 8px 14px;
+}
+
+button:hover { border-color: var(--accent); }
+
+.btn-add { margin-top: 12px; }
+
+.btn-remove {
+  color: var(--danger);
+  border-color: transparent;
+  background: transparent;
+  padding: 8px 10px;
+}
+.btn-remove:hover { border-color: var(--danger); }
+
+/* ---------- 負債列 ---------- */
+
+.debt-list {
+  display: grid;
+  gap: 10px;
+  /* 負債區塊現在只佔半個版面，卡片化要依「自己的寬度」而非視窗寬度決定 */
+  container-type: inline-size;
+}
+.debt-list.is-empty { display: none; }
+
+/* 寬螢幕：表格式一列多欄 */
+.debt-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+  padding: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.debt-index {
+  font-size: 12px;
+  color: var(--faint);
+  padding-bottom: 10px;
+}
+
+/* 空間不足時：每筆一張卡片，欄位垂直堆疊。
+   以容器查詢為主，視窗查詢為不支援容器查詢時的退路。 */
+@container (max-width: 430px) {
+  .debt-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .debt-index { padding-bottom: 0; }
+  .debt-actions { justify-self: end; }
+}
+
+@media (max-width: 640px) {
+  .debt-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .debt-index { padding-bottom: 0; }
+  .debt-actions { justify-self: end; }
+}
+
+/* ---------- 警示條 ---------- */
+
+#warnings { display: grid; gap: 8px; margin: 4px 0 16px; }
+
+.warning {
+  border: 1px solid var(--warn);
+  border-left-width: 4px;
+  background: rgba(255, 193, 77, 0.08);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+/* ---------- 結論卡 ---------- */
+
+.summary {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 18px 18px 14px;
+  margin-bottom: 18px;
+  border-top: 3px solid var(--border);
+}
+
+.summary .panel-title { margin-bottom: 12px; }
+
+.summary.is-ok { border-top-color: var(--ok); }
+.summary.is-short { border-top-color: var(--danger); }
+.summary.is-empty { border-top-color: var(--border); }
+
+.summary-headline {
+  margin: 0 0 10px;
+  font-size: clamp(20px, 4.6vw, 30px);
+  font-weight: 700;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.is-ok .summary-headline { color: var(--ok); }
+.is-short .summary-headline { color: var(--danger); }
+
+.summary-notes {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.summary-notes li { margin: 2px 0; }
+.summary-notes li::marker { color: var(--tone-base); }
+
+/* 負債付清時程 */
+.payoff-schedule {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.payoff-schedule h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--tone-debt);
+}
+
+.payoff-schedule ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.payoff-item {
+  font-size: 14px;
+  color: var(--muted);
+  padding-left: 18px;
+  position: relative;
+  font-variant-numeric: tabular-nums;
+}
+
+.payoff-item::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.payoff-item.is-done::before { content: '✓'; color: var(--ok); }
+.payoff-item.is-warn::before { content: '!'; color: var(--warn); font-weight: 700; }
+
+.empty-state {
+  color: var(--faint);
+  font-size: 14px;
+  margin: 0;
+  padding: 18px 0;
+  text-align: center;
+}
+
+/* ---------- 面板 / 圖表 ---------- */
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chart-container { width: 100%; margin: 8px 0 4px; }
+.chart-container svg { display: block; max-width: 100%; }
+
+.legend { font-size: 12px; color: var(--faint); margin: 4px 0 0; }
+.key {
+  display: inline-block;
+  width: 18px; height: 3px;
+  border-radius: 2px;
+  margin: 0 6px 0 14px;
+  vertical-align: middle;
+}
+.legend .key:first-child { margin-left: 0; }
+.key-cash { background: var(--line-cash); }
+.key-invest { background: var(--line-invest); }
+.key-debt { background: var(--line-debt); }
+
+/* SVG 線條與文字顏色一律用主題變數 */
+.chart-grid { stroke: var(--border); stroke-width: 1; }
+.chart-zero { stroke: var(--faint); stroke-width: 1.5; }
+.chart-tick { fill: var(--faint); font-size: 11px; }
+.chart-tick-y { text-anchor: end; }
+.chart-tick-x { text-anchor: middle; }
+.chart-line-cash { fill: none; stroke: var(--line-cash); stroke-width: 2.2; }
+.chart-line-invest { fill: none; stroke: var(--line-invest); stroke-width: 2; }
+.chart-line-debt { fill: none; stroke: var(--line-debt); stroke-width: 1.8; stroke-dasharray: 6 3; }
+.chart-payoff { stroke: var(--line-debt); stroke-width: 1; stroke-dasharray: 4 4; }
+.chart-payoff-label { fill: var(--faint); font-size: 11px; }
+.chart-gap { fill: var(--gap-fill); }
+.chart-gap-label { fill: var(--danger); font-size: 11px; }
+.chart-exhaust-dot { fill: var(--danger); }
+.chart-exhaust-label { fill: var(--danger); font-size: 12px; }
+
+/* ---------- 報表 ---------- */
+
+/* 表格自身橫向捲動，頁面不橫捲 */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.report {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 820px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.report th, .report td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.report thead th {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* 表頭依欄位語意上色，對應圖表的三條線 */
+.report thead th:nth-child(2),
+.report thead th:nth-child(7) { color: var(--line-cash); }
+.report thead th:nth-child(3),
+.report thead th:nth-child(4),
+.report thead th:nth-child(8) { color: var(--line-invest); }
+.report thead th:nth-child(5) { color: var(--tone-expense); }
+.report thead th:nth-child(6) { color: var(--line-debt); }
+.report thead th:nth-child(9) { color: var(--text); }
+
+.report th.period, .report td.period { text-align: left; }
+.report thead th:first-child { text-align: left; }
+
+.year-row { background: var(--panel-2); }
+.year-row td, .year-row th { font-weight: 600; }
+.year-row td:last-child { color: var(--text); }
+
+.year-toggle {
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: 2px 4px;
+  font-weight: 600;
+}
+.year-toggle .caret { color: var(--faint); display: inline-block; width: 1em; }
+
+.month-row td { color: var(--muted); }
+.month-row .period { padding-left: 26px; }
+
+.num.neg { color: var(--danger); }
+
+.payoff-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.14);
+  color: var(--ok);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.page-footer {
+  color: var(--faint);
+  font-size: 12px;
+  text-align: center;
+  margin-top: 24px;
+}

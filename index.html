@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>退休試算</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="page-header">
+    <h1>退休試算</h1>
+    <p class="lede">
+      輸入現有的現金與投資、每月開銷與負債，看資產能撐多久。
+      本試算採固定名目金額，<strong>不計通膨</strong>，也不含退休後其他收入。
+    </p>
+  </header>
+
+  <form id="form" novalidate>
+    <div class="form-row">
+    <fieldset data-tone="base">
+      <legend>基本</legend>
+      <div class="grid">
+        <div class="field">
+          <label for="years">還要活多久（年）</label>
+          <input id="years" type="number" min="1" step="1" autocomplete="off" placeholder="例：35">
+          <p class="error" data-error-for="years" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="cash">現金</label>
+          <input id="cash" class="money" type="text" inputmode="numeric" autocomplete="off" placeholder="例：1,000,000">
+          <p class="hint">每月支出會先動用這裡</p>
+          <p class="error" data-error-for="cash" aria-live="polite"></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset data-tone="income">
+      <legend>收入</legend>
+      <div class="grid">
+        <div class="field">
+          <label for="investment">投資金額</label>
+          <input id="investment" class="money" type="text" inputmode="numeric" autocomplete="off" placeholder="例：5,000,000">
+          <p class="hint">投資部位本金</p>
+          <p class="error" data-error-for="investment" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="rate">預期年報酬率（%）</label>
+          <input id="rate" type="number" min="0" step="0.01" autocomplete="off" placeholder="例：4">
+          <p class="hint">報酬存入現金，不滾入本金（不複利）</p>
+          <p class="error" data-error-for="rate" aria-live="polite"></p>
+        </div>
+      </div>
+    </fieldset>
+    </div>
+
+    <fieldset class="group" data-tone="expense">
+      <legend>支出</legend>
+      <div class="form-row">
+        <fieldset data-tone="general">
+          <legend>一般</legend>
+          <div class="grid">
+            <div class="field">
+              <label for="expense">每月開銷</label>
+              <input id="expense" class="money" type="text" inputmode="numeric" autocomplete="off" placeholder="例：40,000">
+              <p class="hint">生活支出（固定支出＋非固定支出）</p>
+              <p class="error" data-error-for="expense" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset data-tone="debt">
+          <legend>負債</legend>
+          <p class="hint">負債不計利息，只用「每月還款額 × 剩餘月份」描述。沒有負債就留空。</p>
+          <div id="debt-list" class="debt-list is-empty"></div>
+          <button type="button" id="add-debt" class="btn-add">＋ 新增一筆負債</button>
+        </fieldset>
+      </div>
+    </fieldset>
+  </form>
+
+  <div id="warnings" role="status" aria-live="polite" hidden></div>
+
+  <section id="summary" class="summary" aria-labelledby="summary-title"></section>
+
+  <section class="panel">
+    <h2 class="panel-title">資產走勢</h2>
+    <div id="chart-container" class="chart-container"></div>
+    <p id="chart-summary" class="sr-only" aria-live="polite"></p>
+    <p class="legend">
+      <span class="key key-cash"></span>現金
+      <span class="key key-invest"></span>投資金額
+      <span class="key key-debt"></span>負債（剩餘還款總額）
+    </p>
+    <p class="hint">
+      現金與投資金額只涵蓋你輸入的部位，不包含房屋、不動產或其他未輸入的資產。
+      現金低於 0 的區段是累計資金缺口，本試算不對缺口計息。
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">逐年／逐月報表</h2>
+      <button type="button" id="toggle-all" data-state="closed">全部展開</button>
+    </div>
+    <div class="table-wrap">
+      <table class="report" id="report">
+        <thead>
+          <tr>
+            <th scope="col">期間</th>
+            <th scope="col">期初現金</th>
+            <th scope="col">期初投資金額</th>
+            <th scope="col">投資報酬</th>
+            <th scope="col">生活支出</th>
+            <th scope="col" title="多筆負債時為各筆月付加總">貸款還款</th>
+            <th scope="col">期末現金</th>
+            <th scope="col">期末投資金額</th>
+            <th scope="col" title="期末現金 ＋ 期末投資金額，可為負">總資產</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <p id="report-empty" class="empty-state">填入上方欄位後，報表會出現在這裡。</p>
+  </section>
+
+  <footer class="page-footer">
+    <p>本工具僅供情境試算，不構成財務建議。模型假設與已知簡化請見 README。</p>
+  </footer>
+
+</div>
+<script type="module" src="js/ui.js"></script>
+</body>
+</html>
