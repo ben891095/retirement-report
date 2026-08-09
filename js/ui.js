@@ -80,12 +80,12 @@ function createDebtRow() {
     <div class="field">
       <label for="${id}-payment">每月還款額</label>
       <input id="${id}-payment" class="money" data-role="payment" type="text"
-             inputmode="numeric" autocomplete="off" value="">
+             inputmode="numeric" autocomplete="off" value="" placeholder="例：15,000">
     </div>
     <div class="field">
       <label for="${id}-months">剩餘月份</label>
       <input id="${id}-months" data-role="months" type="number" min="0" step="1"
-             autocomplete="off" value="">
+             autocomplete="off" value="" placeholder="例：36">
     </div>
     <div class="debt-actions">
       <button type="button" class="btn-remove" data-role="remove">刪除</button>
