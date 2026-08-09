@@ -296,7 +296,7 @@ retirement_report/
 
 ### 字體與尺寸
 
-字族：`"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif`；基準 17px / 行高 1.6（原 15px，2026-08 為提升可讀性調大）。
+字族：`"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif`；基準 17px / 行高 1.6（原 15px，2026-08 為提升可讀性調大）。**全站字體最小 14px**，無例外（含報表表格、SVG 圖表刻度與標籤）。
 
 | 位置 | 尺寸 | 字重 | 顏色 |
 |---|---|---|---|
@@ -304,15 +304,15 @@ retirement_report/
 | 面板標題 `.panel-title` | 19px | 700 | `--tone-base`，左側 3px 色條 + 10px 內距 |
 | `fieldset > legend` | 15px（外層群組維持 14px） | 700 | 各自的 `--tone-*`，字距 0.06em |
 | 結論大字 | `clamp(20px, 4.6vw, 30px)` | 700 | 撐得過 `--ok`／撐不過 `--danger` |
-| 結論註解 / 付清時程 | 14px | 400 | `--muted` |
+| 結論註解 / 付清時程 / 負債列編號 | 14px | 400 | `--muted` |
 | 欄位標籤 | 15px | 預設 | `--muted` |
 | 提示 `.hint` / 圖例 | 14px | 400 | `--faint` |
-| 報表內容 | 13px | 400 | 月列 `--muted`，年列 600 |
-| 報表表頭 | 12px | 600 | 依欄位語意上色（見下） |
+| 報表內容與表頭 | 14px | 400（表頭 600） | 表頭依欄位語意上色（見下） |
 | 錯誤訊息 | 14px | 400 | `--danger`，`min-height: 1em` 佔位避免跳版 |
-| SVG 刻度 | 11px | 400 | `--faint` |
+| SVG 刻度 / 圖上標籤 / 結清標籤 | 14px | 400 | `--faint` 或 `--danger`（見圖表段落） |
+| 頁尾 | 14px | 400 | `--faint` |
 
-報表表格與 SVG 圖表刻度維持原尺寸（13px / 11px），因需容納大量數字避免橫向溢出，不隨本次調整放大。
+SVG 圖表刻度放大後，`js/chart.js` 的內距 `pad.left`／`pad.bottom` 已同步加大（56/74→64/82，34→38），避免 y 軸金額標籤或 x 軸年份標籤被裁切。
 
 ### 間距與形狀
 
@@ -423,3 +423,4 @@ README 必須清楚揭露上述四點，並註明：固定名目支出、不計�
 ## 變更記錄
 
 - 2026-08-09：UI 微調 —— 全站基準字體 15px→17px（含標題、legend、欄位標籤、hint、錯誤訊息，詳見「字體與尺寸」）；負債列「每月還款額」「剩餘月份」補上 placeholder（例：15,000 / 例：36）；分頁 favicon 改為 💰 emoji（inline SVG data URI）。曾短暫在 `h1` 旁加 💰 icon，後依需求移除，僅保留 favicon。
+- 2026-08-09（追加）：發現報表表頭與內容、圖表 SVG 刻度、圖例、頁尾等處仍殘留 11–13px，補齊為**全站最小 14px**；`js/chart.js` 內距同步加大以容納放大後的刻度文字，避免裁切。

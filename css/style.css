@@ -234,7 +234,7 @@ button:hover { border-color: var(--accent); }
 }
 
 .debt-index {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--faint);
   padding-bottom: 10px;
 }
@@ -319,7 +319,7 @@ button:hover { border-color: var(--accent); }
 
 .payoff-schedule h3 {
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--tone-debt);
@@ -378,7 +378,7 @@ button:hover { border-color: var(--accent); }
 .chart-container { width: 100%; margin: 8px 0 4px; }
 .chart-container svg { display: block; max-width: 100%; }
 
-.legend { font-size: 12px; color: var(--faint); margin: 4px 0 0; }
+.legend { font-size: 14px; color: var(--faint); margin: 4px 0 0; }
 .key {
   display: inline-block;
   width: 18px; height: 3px;
@@ -394,18 +394,18 @@ button:hover { border-color: var(--accent); }
 /* SVG 線條與文字顏色一律用主題變數 */
 .chart-grid { stroke: var(--border); stroke-width: 1; }
 .chart-zero { stroke: var(--faint); stroke-width: 1.5; }
-.chart-tick { fill: var(--faint); font-size: 11px; }
+.chart-tick { fill: var(--faint); font-size: 14px; }
 .chart-tick-y { text-anchor: end; }
 .chart-tick-x { text-anchor: middle; }
 .chart-line-cash { fill: none; stroke: var(--line-cash); stroke-width: 2.2; }
 .chart-line-invest { fill: none; stroke: var(--line-invest); stroke-width: 2; }
 .chart-line-debt { fill: none; stroke: var(--line-debt); stroke-width: 1.8; stroke-dasharray: 6 3; }
 .chart-payoff { stroke: var(--line-debt); stroke-width: 1; stroke-dasharray: 4 4; }
-.chart-payoff-label { fill: var(--faint); font-size: 11px; }
+.chart-payoff-label { fill: var(--faint); font-size: 14px; }
 .chart-gap { fill: var(--gap-fill); }
-.chart-gap-label { fill: var(--danger); font-size: 11px; }
+.chart-gap-label { fill: var(--danger); font-size: 14px; }
 .chart-exhaust-dot { fill: var(--danger); }
-.chart-exhaust-label { fill: var(--danger); font-size: 12px; }
+.chart-exhaust-label { fill: var(--danger); font-size: 14px; }
 
 /* ---------- 報表 ---------- */
 
@@ -416,7 +416,7 @@ button:hover { border-color: var(--accent); }
   border-collapse: collapse;
   width: 100%;
   min-width: 820px;
-  font-size: 13px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -432,7 +432,7 @@ button:hover { border-color: var(--accent); }
   top: 0;
   background: var(--panel);
   color: var(--faint);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   text-align: right;
 }
@@ -475,13 +475,13 @@ button:hover { border-color: var(--accent); }
   border-radius: 999px;
   background: rgba(74, 222, 128, 0.14);
   color: var(--ok);
-  font-size: 11px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
 .page-footer {
   color: var(--faint);
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   margin-top: 24px;
 }

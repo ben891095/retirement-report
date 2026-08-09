@@ -40,7 +40,7 @@ export function renderChart(container, result, summaryNode) {
 
   const width = Math.max(container.clientWidth || 0, 280);
   const height = width < 480 ? 260 : 320;
-  const pad = { top: 18, right: 18, bottom: 34, left: width < 480 ? 56 : 74 };
+  const pad = { top: 18, right: 18, bottom: 38, left: width < 480 ? 64 : 82 };
   const innerW = width - pad.left - pad.right;
   const innerH = height - pad.top - pad.bottom;
 
